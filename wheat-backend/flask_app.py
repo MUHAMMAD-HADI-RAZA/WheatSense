@@ -25,23 +25,32 @@ model1, model2 = None, None
 model1_name = "YOLOv8 (best.pt)"
 model2_name = "YOLOv10 Nano (yolo10.pt)"
 
-try:
-    model1_path = r"e:\react\yolo_venv\best.pt"
-    if not os.path.exists(model1_path):
-        model1_path = "best.pt"
-    model1 = YOLO(model1_path)
-    print(f"Loaded Model 1: {model1_path}")
-except Exception as e:
-    print(f"Error loading Model 1: {e}")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 try:
-    model2_path = r"e:\react\yolo10.pt"
-    if not os.path.exists(model2_path):
-        model2_path = "yolo10.pt"
-    model2 = YOLO(model2_path)
-    print(f"Loaded Model 2: {model2_path}")
+    # Try local Windows paths first, then relative paths (Railway/production)
+    model1_candidates = [
+        os.path.join(BASE_DIR, "best.pt"),
+        r"e:\react\yolo_venv\best.pt",
+        "best.pt"
+    ]
+    model1_path = next((p for p in model1_candidates if os.path.exists(p)), model1_candidates[0])
+    model1 = YOLO(model1_path)
+    print(f"✅ Loaded Model 1: {model1_path}")
 except Exception as e:
-    print(f"Error loading Model 2: {e}")
+    print(f"❌ Error loading Model 1: {e}")
+
+try:
+    model2_candidates = [
+        os.path.join(BASE_DIR, "yolo10.pt"),
+        r"e:\react\yolo10.pt",
+        "yolo10.pt"
+    ]
+    model2_path = next((p for p in model2_candidates if os.path.exists(p)), model2_candidates[0])
+    model2 = YOLO(model2_path)
+    print(f"✅ Loaded Model 2: {model2_path}")
+except Exception as e:
+    print(f"❌ Error loading Model 2: {e}")
 
 # ==========================================
 # METADATA AND HELPERS
@@ -295,4 +304,5 @@ def get_analytics():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

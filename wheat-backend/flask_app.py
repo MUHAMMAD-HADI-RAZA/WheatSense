@@ -8,15 +8,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
 import numpy as np
-import cv2
 
-try:
-    from ultralytics import YOLO
-except ImportError:
-    print("Please install ultralytics: pip install ultralytics")
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ==========================================
 # MODEL INITIALIZATION
@@ -242,6 +237,7 @@ def predict():
     conf_thresh = float(request.form.get('confidence', 0.25))
 
     try:
+        import cv2
         image_bytes = file.read()
         nparr = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)

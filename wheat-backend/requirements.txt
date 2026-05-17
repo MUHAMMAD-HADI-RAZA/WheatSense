@@ -1,7 +1,7 @@
-flask
-flask-cors
-gunicorn
-ultralytics
-opencv-python-headless
-numpy
-pillow
+flask==3.0.3
+flask-cors==4.0.1
+gunicorn==22.0.0
+ultralytics==8.3.40
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
+pillow==10.4.0

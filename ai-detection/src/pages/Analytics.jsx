@@ -16,7 +16,7 @@ export default function Analytics() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:5000/analytics');
+      const res = await fetch('https://wheatsense-production.up.railway.app/analytics');
       const data = await res.json();
       if (data.success) {
         setHistory(data.history);

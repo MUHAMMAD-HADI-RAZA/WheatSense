@@ -55,7 +55,7 @@ export default function Detect() {
     formData.append("confidence", confidence.toString());
 
     try {
-      const res = await fetch("http://localhost:5000/predict", {
+      const res = await fetch("https://wheatsense-production.up.railway.app/predict", {
         method: "POST",
         body: formData,
       });

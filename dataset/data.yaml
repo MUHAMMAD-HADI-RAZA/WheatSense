@@ -1,0 +1,17 @@
+path: e:\react\dataset
+train: images/train
+val: images/val
+test: images/test
+
+nc: 10
+names:
+  0: Yellow_Rust
+  1: Brown_Rust
+  2: Leaf_Blight
+  3: Healthy
+  4: Ear_Cockle
+  5: Foot_Rot
+  6: Karnal_Bunt
+  7: Powdery_Mildew
+  8: Smut_of_Wheat
+  9: Stem_Rust

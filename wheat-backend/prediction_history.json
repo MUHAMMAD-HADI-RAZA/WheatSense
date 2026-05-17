@@ -1,0 +1,277 @@
+[
+    {
+        "timestamp": "2026-05-17T03:18:42.806671",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 25.77,
+            "inference_time_ms": 599.53,
+            "classes": [
+                "Stem_Rust"
+            ]
+        },
+        "model2": {
+            "detections": 1,
+            "avg_confidence": 29.37,
+            "inference_time_ms": 302.81,
+            "classes": [
+                "Stem_Rust"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T03:25:36.872600",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 38.49,
+            "inference_time_ms": 206.77,
+            "classes": [
+                "Stem_Rust"
+            ]
+        },
+        "model2": {
+            "detections": 1,
+            "avg_confidence": 25.06,
+            "inference_time_ms": 162.2,
+            "classes": [
+                "Smut_of_Wheat"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T03:30:04.777361",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 26.72,
+            "inference_time_ms": 96.52,
+            "classes": [
+                "Stem_Rust"
+            ]
+        },
+        "model2": {
+            "detections": 1,
+            "avg_confidence": 37.65,
+            "inference_time_ms": 86.03,
+            "classes": [
+                "Stem_Rust"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T03:40:30.543807",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 90.23,
+            "inference_time_ms": 158.03,
+            "classes": [
+                "Brown_Rust"
+            ]
+        },
+        "model2": {
+            "detections": 1,
+            "avg_confidence": 98.11,
+            "inference_time_ms": 116.72,
+            "classes": [
+                "Brown_Rust"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T03:40:58.862823",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 88.02,
+            "inference_time_ms": 156.59,
+            "classes": [
+                "Brown_Rust"
+            ]
+        },
+        "model2": {
+            "detections": 1,
+            "avg_confidence": 98.63,
+            "inference_time_ms": 123.38,
+            "classes": [
+                "Brown_Rust"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T03:41:45.431132",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 91.16,
+            "inference_time_ms": 127.11,
+            "classes": [
+                "Yellow_Rust"
+            ]
+        },
+        "model2": {
+            "detections": 1,
+            "avg_confidence": 97.98,
+            "inference_time_ms": 106.49,
+            "classes": [
+                "Yellow_Rust"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:12:21.781942",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 89.28,
+            "inference_time_ms": 819.92,
+            "classes": [
+                "Healthy"
+            ]
+        },
+        "model2": {
+            "detections": 1,
+            "avg_confidence": 97.59,
+            "inference_time_ms": 384.13,
+            "classes": [
+                "Healthy"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:13:22.239625",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 25.16,
+            "inference_time_ms": 228.67,
+            "classes": [
+                "Leaf_Blight"
+            ]
+        },
+        "model2": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 187.58,
+            "classes": []
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:13:47.642602",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 27.43,
+            "inference_time_ms": 238.93,
+            "classes": [
+                "Stem_Rust"
+            ]
+        },
+        "model2": {
+            "detections": 2,
+            "avg_confidence": 31.16,
+            "inference_time_ms": 204.46,
+            "classes": [
+                "Stem_Rust",
+                "Foot_Rot"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:14:42.265696",
+        "model1": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 164.03,
+            "classes": []
+        },
+        "model2": {
+            "detections": 2,
+            "avg_confidence": 49.97,
+            "inference_time_ms": 172.66,
+            "classes": [
+                "Stem_Rust",
+                "Foot_Rot"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:15:13.921683",
+        "model1": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 166.37,
+            "classes": []
+        },
+        "model2": {
+            "detections": 3,
+            "avg_confidence": 41.69,
+            "inference_time_ms": 158.69,
+            "classes": [
+                "Stem_Rust",
+                "Foot_Rot",
+                "Ear_Cockle"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:15:38.509266",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 31.46,
+            "inference_time_ms": 178.27,
+            "classes": [
+                "Smut_of_Wheat"
+            ]
+        },
+        "model2": {
+            "detections": 2,
+            "avg_confidence": 47.74,
+            "inference_time_ms": 174.33,
+            "classes": [
+                "Powdery_Mildew",
+                "Smut_of_Wheat"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:44:29.120396",
+        "model1": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 257.5,
+            "classes": []
+        },
+        "model2": {
+            "detections": 2,
+            "avg_confidence": 37.51,
+            "inference_time_ms": 235.0,
+            "classes": [
+                "Karnal_Bunt",
+                "Stem_Rust"
+            ]
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:45:14.697076",
+        "model1": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 307.34,
+            "classes": []
+        },
+        "model2": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 276.73,
+            "classes": []
+        }
+    },
+    {
+        "timestamp": "2026-05-17T04:45:34.580102",
+        "model1": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 178.51,
+            "classes": []
+        },
+        "model2": {
+            "detections": 0,
+            "avg_confidence": 0.0,
+            "inference_time_ms": 189.67,
+            "classes": []
+        }
+    }
+]

@@ -1,0 +1,344 @@
+# ✅ Imports
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
+from tensorflow.keras.models import Model
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
+
+# # ✅ Dataset path
+# dataset_path = r"E:/Wheat_Disease Dataset/Wheat"
+
+# # ✅ Parameters
+# img_size = (224, 224)
+# batch_size = 32
+# epochs = 20
+
+# # ✅ Data Augmentation & Preprocessing
+# datagen = ImageDataGenerator(
+#     rescale=1./255,
+#     validation_split=0.2,
+#     rotation_range=20,
+#     zoom_range=0.2,
+#     shear_range=0.2,
+#     width_shift_range=0.2,
+#     height_shift_range=0.2,
+#     horizontal_flip=True
+# )
+
+# train_generator = datagen.flow_from_directory(
+#     dataset_path,
+#     target_size=img_size,
+#     batch_size=batch_size,
+#     class_mode='categorical',
+#     subset='training',
+#     shuffle=True
+# )
+
+# val_generator = datagen.flow_from_directory(
+#     dataset_path,
+#     target_size=img_size,
+#     batch_size=batch_size,
+#     class_mode='categorical',
+#     subset='validation',
+#     shuffle=False
+# )
+
+# # ✅ Number of classes
+# num_classes = train_generator.num_classes
+# class_indices = train_generator.class_indices
+# class_labels = list(class_indices.keys())
+
+# # ✅ Load MobileNetV2 base model
+# base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
+# base_model.trainable = False  # Freeze base layers initially
+
+# # ✅ Custom classification head
+# x = base_model.output
+# x = GlobalAveragePooling2D()(x)
+# x = Dropout(0.4)(x)
+# output = Dense(num_classes, activation='softmax')(x)
+
+# model = Model(inputs=base_model.input, outputs=output)
+
+# # ✅ Compile model
+# model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# # ✅ Callbacks
+# early_stopping = EarlyStopping(monitor='val_loss', patience=4, restore_best_weights=True)
+# reduce_lr = ReduceLROnPlateau(monitor='val_loss', patience=2, factor=0.3, verbose=1)
+
+# # ✅ Train the model
+# history = model.fit(
+#     train_generator,
+#     validation_data=val_generator,
+#     epochs=epochs,
+#     callbacks=[early_stopping, reduce_lr]
+# )
+
+# # ✅ Save the trained model
+# model.save("mobilenet_wheat_model.h5")
+# print("✅ Model saved as mobilenet_wheat_model.h5")
+
+# # ✅ Plot accuracy
+# plt.figure(figsize=(8, 5))
+# plt.plot(history.history['accuracy'], label='Train Accuracy', marker='o')
+# plt.plot(history.history['val_accuracy'], label='Validation Accuracy', marker='o')
+# plt.title('Model Accuracy per Epoch')
+# plt.xlabel('Epoch')
+# plt.ylabel('Accuracy')
+# plt.legend()
+# plt.grid(True)
+# plt.show()
+
+# # ✅ Plot loss
+# plt.figure(figsize=(8, 5))
+# plt.plot(history.history['loss'], label='Train Loss', marker='o')
+# plt.plot(history.history['val_loss'], label='Validation Loss', marker='o')
+# plt.title('Model Loss per Epoch')
+# plt.xlabel('Epoch')
+# plt.ylabel('Loss')
+# plt.legend()
+# plt.grid(True)
+# plt.show()
+
+# # ✅ Evaluate performance on validation data
+# val_generator.reset()
+# predictions = model.predict(val_generator, verbose=1)
+# predicted_classes = np.argmax(predictions, axis=1)
+# true_classes = val_generator.classes
+
+# # ✅ Classification Report (fixed)
+# print("\nClassification Report:\n")
+
+# # Get label indices from class_indices
+# label_indices = list(class_indices.values())
+
+# print(classification_report(
+#     true_classes,
+#     predicted_classes,
+#     labels=label_indices,         # ✅ pass label indices explicitly
+#     target_names=class_labels     # ✅ your original class label names
+# ))
+
+# # ✅ Confusion Matrix
+# cm = confusion_matrix(true_classes, predicted_classes)
+# plt.figure(figsize=(8, 6))
+# sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_labels, yticklabels=class_labels)
+# plt.title('Confusion Matrix')
+# plt.xlabel('Predicted Label')
+# plt.ylabel('True Label')
+# plt.show()
+
+# print("✅ Training and evaluation complete.")
+
+
+
+import cv2
+from PIL import Image
+import tensorflow as tf
+import gradio as gr
+
+# 🌾 Load Trained Model
+model = tf.keras.models.load_model("mobilenet_wheat_model.h5")
+
+# 🏷️ Class Labels in order (must match your model's training)
+labels = [
+    "Wheat___Brown_Rust",
+    "Wheat___Ear_Cockle",
+    "Wheat___Foot_Rot",
+    "Wheat___Healthy",
+    "Wheat___Karnal_Bunt",
+    "Wheat___Powdery_Mildew",
+    "Wheat___Smut_of_Wheat",
+    "Wheat___Stem_Rust",
+    "Wheat___Yellow_Rust"
+
+]
+
+
+# 🧠 Disease Info
+disease_info = {
+    "Wheat___Yellow_Rust": """
+🟡 **Yellow Rust (Stripe Rust)**
+• **Symptoms:** Yellow powdery stripes on leaves.
+• **Causal Organism:** *Puccinia striiformis*
+• **Prevention:**
+  ✓ Use resistant wheat varieties.
+  ✓ Apply balanced fertilizers.
+  ✓ Avoid excessive irrigation.
+• **Fungicide Treatment:**
+  ✓ Propiconazole 25% EC: 200 ml/100L water/acre.
+  ✓ Tebuconazole 250 EC: 200 ml/100L water/acre.
+• **Organic Treatment:**
+  ✓ Neem oil (3%): 30 ml/L water, spray every 7–10 days.
+• **Recommendations:**
+  ✓ Spray fungicides at early infection.
+  ✓ Remove infected crop debris.
+""",
+    "Wheat___Brown_Rust": """
+🟤 **Brown Rust (Leaf Rust)**
+• **Symptoms:** Brown pustules on leaf blades.
+• **Causal Organism:** *Puccinia triticina*
+• **Prevention:**
+  ✓ Plant rust-resistant varieties.
+  ✓ Follow crop rotation.
+  ✓ Ensure good drainage.
+• **Fungicide Treatment:**
+  ✓ Triazole fungicides: 200 ml/100L water/acre.
+  ✓ Mancozeb 75% WP: 2g/L water.
+• **Organic Treatment:**
+  ✓ 10% Milk spray: 1L milk in 10L water, weekly.
+• **Recommendations:**
+  ✓ Spray Triazoles.
+  ✓ Neem oil for organic control.
+""",
+    "Wheat___Stem_Rust": """
+⚫ **Stem Rust (Black Rust)**
+• **Symptoms:** Black powder on stems.
+• **Causal Organism:** *Puccinia graminis*
+• **Prevention:**
+  ✓ Use resistant varieties.
+  ✓ Remove volunteer wheat plants.
+• **Fungicide Treatment:**
+  ✓ Mancozeb 75% WP: 2g/L water.
+  ✓ Triadimefon 25% WP: 250g/ha.
+• **Organic Treatment:**
+  ✓ Garlic extract spray.
+• **Recommendations:**
+  ✓ Apply Mancozeb or Chlorothalonil.
+  ✓ Scout fields regularly.
+""",
+    "Wheat___Karnal_Bunt": """
+⚪ **Karnal Bunt (Partial Bunt)**
+• **Symptoms:** Kernels turn fungal, fishy smell.
+• **Causal Organism:** *Tilletia indica*
+• **Prevention:**
+  ✓ Use certified, disease-free seeds.
+  ✓ Avoid cool, moist sowing conditions.
+• **Seed Treatment:**
+  ✓ Carbendazim 50 WP: 2g/kg seed.
+  ✓ Thiram 75% WP: 2.5g/kg seed.
+• **Field Treatment:**
+  ✓ Propiconazole 25% EC: 200ml/100L water/acre.
+• **Organic Treatment:**
+  ✓ Mustard oil seed coating.
+• **Recommendations:**
+  ✓ Fungicide seed treatment before sowing.
+  ✓ Avoid infected seed storage.
+""",
+    "Wheat___Smut_of_Wheat": """
+⚫ **Smut of Wheat**
+• **Symptoms:** Ears turn black, no grain.
+• **Causal Organism:** *Ustilago tritici*
+• **Prevention:**
+  ✓ Always treat seeds.
+  ✓ Avoid infected seeds.
+• **Seed Treatment:**
+  ✓ Tebuconazole 2% DS: 1.5g/kg seed.
+  ✓ Carboxin 75 WP: 2g/kg seed.
+• **Organic Treatment:**
+  ✓ Hot water treatment at 52°C for 10 mins.
+• **Recommendations:**
+  ✓ Use fungicides.
+  ✓ Burn infected plants.
+""",
+    "Wheat___Foot_Rot": """
+🟤 **Foot Rot**
+• **Symptoms:** Dark root lesions, stunted growth.
+• **Causal Organism:** *Fusarium spp.*
+• **Prevention:**
+  ✓ Good field drainage.
+  ✓ Crop rotation.
+• **Seed Treatment:**
+  ✓ Thiram 75% WP: 2.5g/kg seed.
+  ✓ Carbendazim 50% WP: 1g/kg seed.
+• **Organic Treatment:**
+  ✓ *Trichoderma viride*: 5g/kg seed.
+• **Recommendations:**
+  ✓ Biofungicides for soil.
+  ✓ Seed fungicide treatment.
+""",
+    "Wheat___Powdery_Mildew": """
+⚪ **Powdery Mildew**
+• **Symptoms:** White powdery patches on leaves.
+• **Causal Organism:** *Erysiphe graminis*
+• **Prevention:**
+  ✓ Avoid excess nitrogen.
+  ✓ Maintain airflow in fields.
+• **Fungicide Treatment:**
+  ✓ Sulfur 80% WP: 2g/L water.
+  ✓ Potassium bicarbonate: 3g/L water.
+• **Organic Treatment:**
+  ✓ Baking soda spray.
+• **Recommendations:**
+  ✓ Sulfur fungicides.
+  ✓ Potassium bicarbonate if infection spreads.
+""",
+    "Wheat___Ear_Cockle": """
+🟠 **Ear Cockle**
+• **Symptoms:** Yellow, D-shaped plants.
+• **Causal Organism:** *Anguina tritici*
+• **Prevention:**
+  ✓ Use nematode-free seeds.
+  ✓ Apply compost.
+• **Seed/Soil Treatment:**
+  ✓ Carbofuran 3G: 1kg/acre.
+  ✓ Thiamethoxam 70 WS: 1.5g/kg seed.
+• **Organic Treatment:**
+  ✓ Neem cake: 10kg/acre.
+• **Recommendations:**
+  ✓ Nematocide treatments.
+  ✓ Crop rotation.
+""",
+    "Wheat___Healthy": "🟢 Your crop is healthy. No issues detected!"
+}
+
+
+# 🌐 Prediction State
+last_prediction = {"label": None}
+
+# 🖼️ Predict Function
+def predict(image):
+    image = image.resize((224, 224))
+    image = np.array(image) / 255.0
+    image = np.expand_dims(image, axis=0)
+
+    preds = model.predict(image, verbose=0)
+    confidence = np.max(preds)
+    label = labels[np.argmax(preds)]
+
+    last_prediction["label"] = label
+
+    # Optional: Confidence threshold warning
+    if confidence < 0.6:
+        return f"⚠️ Low confidence prediction.\n🧪 Possible: {label}\n📊 Confidence: {confidence * 100:.2f}%"
+    
+    return f"🧪 Predicted: {label}\n📊 Confidence: {confidence * 100:.2f}%\nClick below to view treatment & disease info."
+
+# ℹ️ Disease Info Fetcher
+def more_info():
+    label = last_prediction["label"]
+    return disease_info.get(label, "ℹ️ No additional info available.")
+
+# 🎛️ Gradio Interface
+with gr.Blocks() as demo:
+    gr.Markdown("## 🌾 Wheat Disease Detector (Google Lens Style)")
+
+    with gr.Row():
+        image_input = gr.Image(type="pil", label="📷 Upload Wheat Leaf Image")
+        prediction_output = gr.Textbox(label="Prediction", lines=3)
+
+    more_btn = gr.Button("📖 Show More Info")
+    info_output = gr.Textbox(label="Disease Info", lines=10)
+
+    image_input.change(fn=predict, inputs=image_input, outputs=prediction_output)
+    image_input.change(fn=lambda: "", outputs=info_output)  # Clear info when new image is loaded
+    more_btn.click(fn=more_info, outputs=info_output)
+
+demo.launch()

@@ -273,5 +273,25 @@
             "inference_time_ms": 189.67,
             "classes": []
         }
+    },
+    {
+        "timestamp": "2026-05-17T05:51:45.327324",
+        "model1": {
+            "detections": 1,
+            "avg_confidence": 36.43,
+            "inference_time_ms": 666.26,
+            "classes": [
+                "Smut_of_Wheat"
+            ]
+        },
+        "model2": {
+            "detections": 2,
+            "avg_confidence": 48.28,
+            "inference_time_ms": 325.51,
+            "classes": [
+                "Powdery_Mildew",
+                "Smut_of_Wheat"
+            ]
+        }
     }
 ]

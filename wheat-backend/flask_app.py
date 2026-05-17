@@ -173,6 +173,7 @@ def log_prediction(model1_res, model2_res):
         print(f"Failed to log history: {e}")
 
 def run_inference(model, img, conf_thresh):
+    import cv2
     start_time = time.time()
     results = model.predict(img, conf=conf_thresh, verbose=False)
     inf_time = (time.time() - start_time) * 1000 # ms

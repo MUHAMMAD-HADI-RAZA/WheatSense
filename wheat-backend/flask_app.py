@@ -27,30 +27,39 @@ model2_name = "YOLOv10 Nano (yolo10.pt)"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-try:
-    # Try local Windows paths first, then relative paths (Railway/production)
-    model1_candidates = [
-        os.path.join(BASE_DIR, "best.pt"),
-        r"e:\react\yolo_venv\best.pt",
-        "best.pt"
-    ]
-    model1_path = next((p for p in model1_candidates if os.path.exists(p)), model1_candidates[0])
-    model1 = YOLO(model1_path)
-    print(f"✅ Loaded Model 1: {model1_path}")
-except Exception as e:
-    print(f"❌ Error loading Model 1: {e}")
+# ==========================================
+# LAZY MODEL LOADING (load on first request)
+# ==========================================
+model1, model2 = None, None
+model1_name = "YOLOv8 (best.pt)"
+model2_name = "YOLOv10 Nano (yolo10.pt)"
+_models_loaded = False
 
-try:
-    model2_candidates = [
-        os.path.join(BASE_DIR, "yolo10.pt"),
-        r"e:\react\yolo10.pt",
-        "yolo10.pt"
-    ]
-    model2_path = next((p for p in model2_candidates if os.path.exists(p)), model2_candidates[0])
-    model2 = YOLO(model2_path)
-    print(f"✅ Loaded Model 2: {model2_path}")
-except Exception as e:
-    print(f"❌ Error loading Model 2: {e}")
+def load_models():
+    global model1, model2, _models_loaded
+    if _models_loaded:
+        return
+    _models_loaded = True
+
+    try:
+        from ultralytics import YOLO
+        model1_path = os.path.join(BASE_DIR, "best.pt")
+        if not os.path.exists(model1_path):
+            model1_path = r"e:\react\yolo_venv\best.pt"
+        model1 = YOLO(model1_path)
+        print(f"✅ Loaded Model 1: {model1_path}")
+    except Exception as e:
+        print(f"❌ Error loading Model 1: {e}")
+
+    try:
+        from ultralytics import YOLO
+        model2_path = os.path.join(BASE_DIR, "yolo10.pt")
+        if not os.path.exists(model2_path):
+            model2_path = r"e:\react\yolo10.pt"
+        model2 = YOLO(model2_path)
+        print(f"✅ Loaded Model 2: {model2_path}")
+    except Exception as e:
+        print(f"❌ Error loading Model 2: {e}")
 
 # ==========================================
 # METADATA AND HELPERS
@@ -219,8 +228,9 @@ def run_inference(model, img, conf_thresh):
 # ==========================================
 @app.route('/predict', methods=['POST'])
 def predict():
+    load_models()
     if model1 is None or model2 is None:
-        return jsonify({"error": "Both models are not loaded properly."}), 500
+        return jsonify({"error": "Models failed to load. Check server logs."}), 500
 
     if 'file' not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
